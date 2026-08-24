@@ -1,0 +1,21 @@
+{
+  "name": "sib-mpla-graphql",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "Ezequiel Reyes",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon ."
+  },
+  "dependencies": {
+    "apollo-server": "^3.13.0",
+    "dotenv": "^17.4.2",
+    "mongoose": "^9.7.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

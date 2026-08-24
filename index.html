@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Buques</h2>
+
+    <button onclick="obtenerBuques()">
+        Obtener Buques
+    </button>
+
+    <ul id="listaBuques"></ul>
+
+    <script>
+        async function obtenerBuques() {
+        const query = `
+            query GetVessels {
+                getVessels {
+                    id
+                    name
+                    tuition
+                    date
+                    code
+                    observations
+                    inform
+                }
+            }
+        `
+        const respuesta = await fetch("http://localhost:4000/graphql", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                query
+            })
+        });
+
+        const datos = await respuesta.json();
+
+        const listaBuques = document.getElementById("listaBuques");
+
+        listaBuques.innerHTML = "";
+        datos?.data?.getVessels.forEach(vessel => {
+            listaBuques.innerHTML += `
+                <li>
+                    ${vessel.name}  
+                </li>
+            `;
+        })
+    }
+    </script>
+</body>
+</html>
