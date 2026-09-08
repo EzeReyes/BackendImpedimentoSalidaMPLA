@@ -4,18 +4,50 @@ const Inspection = require('../models/Inspection');
 // Resolvers
 resolvers = {
     Query: {
-        getVessels : async () => {
+        getVessels: async () => {
             try {
-            const buques = await Vessel.find();
-            return buques; 
-            } catch(error) {
-                console.log(error)
+                const buques = await Vessel.find();
+
+                const inspecciones = await Inspection.find()
+                    .populate('vessel')
+                    .populate('previousInspection');
+
+                const buquesConInspecciones = buques.map(buque => {
+                    const inspeccionesDelBuque = inspecciones.filter(
+                        inspeccion =>
+                            inspeccion.vessel &&
+                            inspeccion.vessel._id.toString() === buque._id.toString()
+                    );
+
+                    return {
+                        id: buque._id.toString(),
+                        name: buque.name,
+                        tuition: buque.tuition,
+                        inspections: inspeccionesDelBuque
+                    };
+                });
+
+                return buquesConInspecciones;
+
+            } catch (error) {
+                console.error(error);
+                throw new Error("Error al obtener los buques");
             }
         },
         getVessel : async (_, {id}) => {
             try {
             const buque = await Vessel.findById(id);
-            return buque; 
+
+            const inspecciones = await Inspection.find({vessel: id})
+                    .populate('vessel')
+                    .populate('previousInspection');
+
+                    return {
+                        id: buque._id.toString(),
+                        name: buque.name,
+                        tuition: buque.tuition,
+                        inspections: inspecciones
+                    };
             } catch(error) {
                 console.log(error)
             }
