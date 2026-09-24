@@ -14,8 +14,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://buquesimpedimentompla.vercel.app",
-    // origin: "http://localhost:5173",
+    origin: process.env.FRONT_URL || "http://localhost:5173",
     credentials: true,
   })
 );

@@ -1,14 +1,25 @@
-// db.js
 const mongoose = require('mongoose');
-require('dotenv').config({ path: '.env' });
+const dns = require('dns');
+
+require('dotenv').config();
+
+dns.setServers(['1.1.1.1']);
 
 const conectarDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('DB conectada');
+    console.log('Intentando conectar a MongoDB...');
+
+    await mongoose.connect(process.env.MONGO_URI, {
+      serverSelectionTimeoutMS: 10000,
+    });
+
+    console.log('DB conectada correctamente');
   } catch (error) {
-    console.error('Error al conectar la base de datos:', error);
-    process.exit(1); // Detener la aplicación
+    console.error('Error al conectar la base de datos:');
+    console.error('Nombre:', error.name);
+    console.error('Mensaje:', error.message);
+
+    process.exit(1);
   }
 };
 
