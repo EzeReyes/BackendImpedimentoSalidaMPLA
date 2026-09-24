@@ -1,19 +1,56 @@
-const { ApolloServer, gql} = require ('apollo-server');
-const typeDefs = require('./db/schema');
-const resolvers = require('./db/resolvers');
-const conectarDB = require('./config/db');
-const  transformDate = require('./tranformDate')
+const { ApolloServer } = require("@apollo/server");
+const { expressMiddleware } = require("@as-integrations/express4");
 
-// servidor
+const typeDefs = require("./db/schema");
+const resolvers = require("./db/resolvers");
+const conectarDB = require("./config/db");
+
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+
+const app = express();
+
+// Middlewares
+app.use(cookieParser());
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
+app.use(express.json());
+
+// Apollo Server
 const server = new ApolloServer({
-    typeDefs,
-    resolvers
+  typeDefs,
+  resolvers,
 });
-conectarDB();
-const dia = new Date("2026-07-12T20:39:31.899+00:00");
-console.log(transformDate(dia));
-// arrancar el servidor
-server.listen().then( ({url}) => {
-    console.log(`Servidor listo en la URL ${url}`);
-})
 
+const startServer = async () => {
+  try {
+    await conectarDB();
+
+    await server.start();
+
+    app.use(
+      "/graphql",
+      expressMiddleware(server, {
+      context: async ({ req, res }) => {
+      return { req, res }; 
+      },     
+    })
+    );
+
+    app.listen(4000, () => {
+      console.log("Servidor funcionando en http://localhost:4000");
+      console.log("GraphQL en http://localhost:4000/graphql");
+    });
+  } catch (error) {
+    console.error("Error iniciando servidor:", error);
+  }
+};
+
+startServer();

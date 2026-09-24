@@ -15,6 +15,13 @@ input InputVessel {
     tuition: String!
 }
 
+type User {
+    id: ID!
+    name: String!
+    password: String!
+    email: String!
+}
+
 type Inspection {
     id: ID!
     date: String!
@@ -36,6 +43,12 @@ input InputInspection {
     code: Code!
     vessel: ID!
     previousInspection: ID
+}
+
+type Response {
+    success: Boolean!
+    message: String!
+    user: User
 }
 
 enum InspectionType {
@@ -62,7 +75,9 @@ enum Code {
 type Query {
     getVessels: [Vessel]
     getVessel(id: ID!): Vessel
-
+    getUsers: [User]
+    getUser(id: ID!): User
+    verificarSesion: User
     getInspections: [Inspection]!
     getInspection(id: ID!): Inspection
 }
@@ -71,10 +86,12 @@ type Mutation {
     newVessel(input: InputVessel!): Vessel
     editVessel(id: ID!, input: InputVessel!): Vessel
     deleteVessel(id: ID!): String
-
+    createUser(name: String!, email: String!, password: String!): User
+    login(email: String!, password: String!): String
     newInspection(input: InputInspection!): Inspection
     editInspection(id: ID!, input: InputInspection!): Inspection
     deleteInspection(id: ID!): String
+    logout: String
 }
 `;
 
