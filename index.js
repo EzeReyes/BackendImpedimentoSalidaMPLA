@@ -9,6 +9,9 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
+const app = express();
+
+
 app.use(
   cors({
     origin: "https://buquesimpedimentompla.vercel.app",
@@ -16,8 +19,6 @@ app.use(
     credentials: true,
   })
 );
-
-const app = express();
 
 // Middlewares
 app.use(cookieParser());
