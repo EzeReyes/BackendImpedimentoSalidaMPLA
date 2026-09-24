@@ -16,7 +16,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "https://buquesimpedimentompla.vercel.app/",
+    origin: "https://buquesimpedimentompla.vercel.app",
     // origin: "http://localhost:5173",
     credentials: false,
   })
