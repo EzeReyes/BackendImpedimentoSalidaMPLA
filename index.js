@@ -18,7 +18,7 @@ app.use(
   cors({
     origin: "https://buquesimpedimentompla.vercel.app/",
     // origin: "http://localhost:5173",
-    credentials: true,
+    credentials: false,
   })
 );
 
